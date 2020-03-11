@@ -1,0 +1,24 @@
+---
+# tasks file for pwydymus
+#
+- hosts: localhost
+  vars:
+    repo_pp_branch: master
+    merge_pp_branch_to: pwy20200308-02
+    source_git_repos_dir: 000/
+
+  tasks:
+  # - name: Blad
+  #   command: "git {{ item }}"
+  #   with_items:
+  #   - reset --hard
+  #   - checkout remove-old-vm
+
+  - name: Continue with new branch testing without merging | Git Reset
+    command: git reset --hard
+    args:
+      chdir: "{{ source_git_repos_dir }}/productpages"
+  - name: Continue with new branch testing without merging | Checkout to new branch
+    command: git checkout {{ repo_pp_branch }}
+    args:
+      chdir: "{{ source_git_repos_dir }}/productpages"

@@ -1,0 +1,50 @@
+---
+# tasks file for pwydymus
+#
+- hosts: localhost
+  vars:
+#    repo_pp_branch: devel
+#    merge_pp_branch_to: pwy20200308-02
+#    source_git_repos_dir: https://gitlab.cee.redhat.com/pnt-program-management/productpages.git
+
+  tasks:
+  - name: Cloning source repos
+    block:
+      - debug:
+          msg: 'I execute normally'
+      - name: Clone source repos of new branch
+        git:
+          #repo: "{{ source_git_repos[item.name]['url'] }}"
+          repo: https://gitlab.cee.redhat.com/pnt-program-management/productpages.git
+          version: "{{ item.branch|default('devel') }}"
+          dest: "{{ source_git_repos_dir }}/{{ item.name }}"
+          #key_file: "{{ item.key_file|default('') }}"
+          #ssh_opts: "{{ source_git_ssh_opts }}"
+        loop:
+          - name: productpages
+            branch: "{{ repo_pp_branch }}" # If desired, new branch still exists on remote - it will be cloned
+            #key_file: "{{ source_git_repos['productpages']['key_file'] }}"
+      - debug:
+          msg: 'Other error during execution.' # Message for other possible cases
+    rescue:
+      - debug:
+          msg: 'New branch doesnt exist anymore - probably merged already - lets do test on destination one'
+      - name: Clone source repos of destination
+        git:
+          #repo: "{{ source_git_repos[item.name]['url'] }}"
+          repo: https://gitlab.cee.redhat.com/pnt-program-management/productpages.git
+          version: "{{ item.branch|default('devel') }}"
+          dest: "{{ source_git_repos_dir }}/{{ item.name }}"
+          #key_file: "{{ item.key_file|default('') }}"
+          #ssh_opts: "{{ source_git_ssh_opts }}"
+        loop:
+          - name: productpages
+            branch: "{{ merge_pp_branch_to }}" # If desired, new branch doesn't exist anymore on remote, destination (devel as default, in most cases) will be cloned
+          #   key_file: "{{ source_git_repos['productpages']['key_file'] }}"
+
+          # - name: rh-pgm-utils
+          #   branch: "{{ repo_rh_pgm_utils_branch|default('devel') }}"
+          #   key_file: "{{ source_git_repos['rh-pgm-utils']['key_file'] }}"
+
+          # - name: schedules-tools
+          #   branch: "{{ repo_schedules_tools_branch|default('devel') }}"

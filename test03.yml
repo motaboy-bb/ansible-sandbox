@@ -1,0 +1,23 @@
+---
+# tasks file for pwydymus
+#
+- hosts: localhost
+  vars:
+    repo_pp_branch: devel
+    merge_pp_branch_to: pwy20200308-02
+    source_git_repos_dir: https://gitlab.cee.redhat.com/pnt-program-management/productpages.git
+
+  tasks:
+  - name: Cloning source repos
+    block:
+      - debug:
+          msg: 'I execute normally'
+      - name: Clone source repos of new branch
+        command:
+          cmd: mkdir ppp01/
+      - debug:
+          msg: 'Other error'
+    rescue:
+      - debug:
+          msg: 'ERROR | New branch that job started with, not exist anymore. Stopping.' #message will go to console
+      - meta: end_play # will stop a play and jenkins job

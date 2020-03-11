@@ -1,0 +1,15 @@
+---
+# tasks file for pwydymus
+#
+- hosts: localhost
+  vars:
+    repo_pp_branch: devel
+    merge_pp_branch_to: pwy20200308-02
+    source_git_repos_dir: https://gitlab.cee.redhat.com/pnt-program-management/productpages.git
+
+  tasks:
+  - name: Blad
+    git:
+      repo: local
+      version: master
+      dest: master-test

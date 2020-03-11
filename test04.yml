@@ -1,0 +1,38 @@
+---
+# tasks file for pwydymus
+#
+- hosts: localhost
+  vars:
+    repo_pp_branch: pwy20200308-02
+    merge_pp_branch_to: devel
+  
+  tasks:
+
+  - name: Do local merge current branch into different | Check if merge is successful
+    block:
+      - debug:
+          msg: Trying to merge
+      - name: Do local merge current branch into different | actual merging
+        command: mkdir ppp01
+        args:
+          chdir: 000/
+        when: merge_pp_branch_to is defined and merge_pp_branch_to != ''
+    rescue:
+      - debug:
+          msg: Merging unsuccessful. Continue with new branch without merging.
+      - name: Continue with new branch testing without merging
+        set_fact:
+          merge_pp_branch_to: "{{ repo_pp_branch }}"
+          cacheable: yes
+        # command: mkdir ppp02
+        when: merge_pp_branch_to is defined and merge_pp_branch_to != ''
+
+
+  - name: Test
+    command: mkdir {{ merge_pp_branch_to }}
+          
+      # - set_fact:
+      #     merge_pp_branch_to: "{{ repo_pp_branch }}"
+      #     cacheable: yes
+
+
